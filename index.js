@@ -7,8 +7,69 @@
 // import the JSON data about the crowd funded games from the games.js file
 import GAMES_DATA from './games.js';
 
+
 // create a list of objects to store the data about the games using JSON.parse
 const GAMES_JSON = JSON.parse(GAMES_DATA)
+
+//MY CODE FOR NAVIGATION BAR
+// Show active menu when scrolling
+const highlightMenu = () => {
+  const elem = document.querySelector('.highlight');
+  const homeMenu = document.querySelector('#home-page');
+  const aboutMenu = document.querySelector('#about-page');
+  const gamesMenu = document.querySelector('#games-page');
+  let scrollPos = window.scrollY;
+
+
+  if (scrollPos < 600) {
+    homeMenu.classList.add('highlight');
+    aboutMenu.classList.remove('highlight');
+    return;
+  } else if (scrollPos < 1600) {
+    aboutMenu.classList.add('highlight');
+    homeMenu.classList.remove('highlight');
+    gamesMenu.classList.remove('highlight');
+    return;
+  } else if (scrollPos < 2345) {
+    gamesMenu.classList.add('highlight');
+    aboutMenu.classList.remove('highlight');
+    return;
+  }
+
+  if ((elem && scrollPos < 600) || elem) {
+    elem.classList.remove('highlight');
+  }
+};
+
+window.addEventListener('scroll', highlightMenu);
+window.addEventListener('click', highlightMenu);
+
+//SEARCHING MY CODE
+function search_game() {
+    let query = document.getElementById("searchInput").value.trim().toLowerCase();
+    let searchGames = GAMES_JSON.find(game => game.name.toLowerCase().includes(query)); 
+    if (searchGames) {
+        // Create a pop-up with the game's details
+        alert(`
+        🎮 Game: ${searchGames.name}
+        🏆 Description: ${searchGames.description}
+        🎮 Backers: ${searchGames.backers}
+        `);
+    } else {
+        alert(`No game found "${query}". Please try again!`);
+    }
+}
+
+// Event Listener
+document.querySelector(".search-button").addEventListener("click", search_game);
+
+document.getElementById("searchInput").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        search_game(); 
+    }
+});
+
+///////
 
 // remove all child elements from a parent element in the DOM
 function deleteChildElements(parent) {
@@ -50,9 +111,6 @@ function addGamesToPage(games) {
     }
 
 }
-//<p class = "label">Pledged: $${game.pledged.toLocaleString()}</p>
-//<p class = "label">Goal: $${game.goal.toLocaleString()}</p>
-
 // call the function we just defined using the correct variable
 // later, we'll call this function using a different list of games
 addGamesToPage(GAMES_JSON);
@@ -143,7 +201,6 @@ fundedBtn.addEventListener("click", filterFundedOnly);
 allBtn.addEventListener("click", showAllGames);
 
 
-
 /*************************************************************************************
  * Challenge 6: Add more information at the top of the page about the company.
  * Skills used: template literals, ternary operator
@@ -195,6 +252,7 @@ const sortedGames =  GAMES_JSON.sort( (item1, item2) => {
 const [bigGame, runnerUp] = sortedGames;
 // create a new element to hold the name of the top pledge game, then append it to the correct element
 const bigGameElement = document.createElement("p"); 
+
 bigGameElement.innerHTML = `🏆 ${bigGame.name}`; 
 firstGameContainer.appendChild(bigGameElement); 
 
